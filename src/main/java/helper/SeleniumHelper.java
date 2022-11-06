@@ -1,15 +1,18 @@
-package services;
+package helper;
 
+import constants.BrowserConstants;
 import exceptions.UnsupportedBrowserException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
-public class SeleniumServices {
+public class SeleniumHelper {
 
     private static WebDriver driver;
     private static WebDriverWait wait;
@@ -17,14 +20,13 @@ public class SeleniumServices {
     /**
      * function to initialize instance of web driver
      * @param browserName: name of the browser
-     * @param waitTimeoutDurationInSeconds: duration of seconds to wait
      */
-    public static void initializeWebDriver(String browserName, Long waitTimeoutDurationInSeconds) {
-        if (browserName.equalsIgnoreCase("chrome")) {
-            System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "\\src\\main\\resources\\drivers\\chrome\\chromedriver_windows_107.exe");
+    public static void initializeWebDriver(BrowserConstants browserName) {
+        if (browserName == BrowserConstants.CHROME) {
+            System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir")
+                    + "\\src\\main\\resources\\drivers\\chrome\\chromedriver_windows_107.exe");
             driver = new ChromeDriver();
         } else throw new UnsupportedBrowserException("Unsupported Browser: " + browserName);
-        initializeWait(waitTimeoutDurationInSeconds);
     }
 
     /**
@@ -54,6 +56,16 @@ public class SeleniumServices {
     }
 
     /**
+     * function to find a list of web elements using a common selector value
+     * @param selector: common selector value to find web elements
+     * @return list of web elements found using the common selector
+     */
+    public static List<WebElement> getListOfWebElements(By selector) {
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(selector));
+        return driver.findElements(selector);
+    }
+
+    /**
      * function to enter text into text box
      * @param selector: selector to find the input element
      * @param text: text value to enter into the text box
@@ -77,5 +89,6 @@ public class SeleniumServices {
     public static void quitWebDriver() {
         driver.manage().deleteAllCookies();
         driver.quit();
+        driver = null;
     }
 }
