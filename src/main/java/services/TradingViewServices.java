@@ -4,6 +4,7 @@ import exceptions.InvalidPropertyKeyException;
 import helper.CSVHelper;
 import helper.PropertiesHelper;
 import helper.SeleniumHelper;
+import helper.UserDetailsHelper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -54,11 +55,20 @@ public class TradingViewServices {
         }
     }
 
+    private static void getUserEmailPasswordWatchlistNameInput() {
+        userEmail = UserDetailsHelper.getUserEmailInput();
+        userPassword = UserDetailsHelper.getUserPasswordInput();
+        newWatchlistName = UserDetailsHelper.getWatchListNameInput();
+    }
+
     /**
      * function to use selenium to sign in to trading view account
      */
     public static void signInToTradingView() {
-        getUserEmailPasswordWatchlistNameProperty();
+        switch (UserDetailsHelper.acceptUsersChoiceForInputMethod()) {
+            case "1" -> getUserEmailPasswordWatchlistNameProperty();
+            case "2" -> getUserEmailPasswordWatchlistNameInput();
+        }
         SeleniumHelper.openWebPageFromURL(TRADING_VIEW_PAGE_URL);
         SeleniumHelper.clickOnWebElement(By.xpath(USER_MENU_BUTTON_XPATH));
         SeleniumHelper.clickOnWebElement(By.xpath(SIGN_IN_BUTTON_XPATH));
@@ -115,7 +125,8 @@ public class TradingViewServices {
             }
         }
         catch (IOException e) {
-            System.out.println("SOME ERROR OCCURRED READING THE SYMBOLS. REASON COULD BE THE CSV FILE IS CORRUPTED");
+            System.out.println("SOME ERROR OCCURRED READING THE SYMBOLS. " +
+                    "REASON COULD BE THE CSV FILE IS MISSING OR CORRUPTED");
         }
     }
 
