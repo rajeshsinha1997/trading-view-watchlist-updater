@@ -1,6 +1,9 @@
 package com.example.twu.helper;
 
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class UserInputHelper {
@@ -210,6 +213,51 @@ public class UserInputHelper {
         }
         else {
             return browserName;
+        }
+    }
+
+    /**
+     * function to get csv file path
+     *
+     * @return csv file path as path
+     */
+    public static Path getCSVFilePathInput() {
+        clearConsoleWindow();
+        String csvFilePath;
+        System.out.println("********************************************");
+        System.out.println("* PLEASE DRAG AND DROP THE CSV FILE        *");
+        System.out.println("* DOWNLOADED FROM NSE WEBSITE BELOW.       *");
+        System.out.println("* OR ENTER THE COMPLETE PATH TO THE        *");
+        System.out.println("* REQUIRED CSV FILE.                       *");
+        System.out.println("********************************************");
+        System.out.print("* DROP THE CSV FILE / PATH TO THE CSV FILE HERE: ");
+        csvFilePath = scanner.nextLine().trim();
+        if (!csvFilePath.endsWith(".csv")) {
+            clearConsoleWindow();
+            System.out.println("********************************************");
+            System.out.println("* Invalid Input! Please provide a csv file *");
+            System.out.println("* or path to a csv file                    *");
+            System.out.println("********************************************");
+            System.out.println("* PRESS ANY KEY TO CONTINUE...             *");
+            System.out.println("********************************************");
+            scanner.nextLine();
+            return getCSVFilePathInput();
+        }
+        else {
+            try {
+                return Paths.get(csvFilePath);
+            }
+            catch (InvalidPathException e) {
+                clearConsoleWindow();
+                System.out.println("********************************************");
+                System.out.println("* Invalid Input! Please provide a csv file *");
+                System.out.println("* or path to a csv file                    *");
+                System.out.println("********************************************");
+                System.out.println("* PRESS ANY KEY TO CONTINUE...             *");
+                System.out.println("********************************************");
+                scanner.nextLine();
+                return getCSVFilePathInput();
+            }
         }
     }
 }

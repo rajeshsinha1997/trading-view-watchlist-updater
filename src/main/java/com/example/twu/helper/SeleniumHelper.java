@@ -55,12 +55,21 @@ public class SeleniumHelper {
     }
 
     /**
-     * function to click on a web element
+     * function to click on a web element by selector
      * @param selector: selector to find the web element
      */
     public static void clickOnWebElement(By selector) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
         driver.findElement(selector).click();
+    }
+
+    /**
+     * function to click on a web element
+     * @param webElement: web element to click
+     */
+    public static void clickOnWebElement(WebElement webElement) {
+        wait.until(ExpectedConditions.elementToBeClickable(webElement));
+        webElement.click();
     }
 
     /**

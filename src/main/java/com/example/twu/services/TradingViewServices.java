@@ -1,13 +1,12 @@
 package com.example.twu.services;
 
 import com.example.twu.constants.BrowserConstants;
-import com.example.twu.helper.CSVHelper;
 import com.example.twu.helper.SeleniumHelper;
 import com.example.twu.helper.UserInputHelper;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 
-import java.io.IOException;
 import java.util.List;
 
 public class TradingViewServices {
@@ -69,51 +68,53 @@ public class TradingViewServices {
      * function to use selenium to create new trading view watchlist if required
      */
     public static void createNewWatchListIfRequired() {
-        SeleniumHelper.clickOnWebElement(By.xpath(WATCH_LIST_BUTTON_XPATH));
-        List<WebElement> watchLists = SeleniumHelper.getListOfWebElements(By.xpath(WATCHLIST_NAMES_LIST_XPATH));
-        int index = -1;
-        for (WebElement watchList : watchLists) {
-            index++;
-            if (watchList.getText().trim().equalsIgnoreCase(newWatchlistName)) {
-                System.out.println("WATCHLIST FOUND WITH NAME: "+newWatchlistName);
-                watchList.click();
-                break;
+        try {
+            SeleniumHelper.clickOnWebElement(By.xpath(WATCH_LIST_BUTTON_XPATH));
+            List<WebElement> watchLists = SeleniumHelper.getListOfWebElements(By.xpath(WATCHLIST_NAMES_LIST_XPATH));
+            boolean found = false;
+            for (WebElement watchList : watchLists) {
+                if (watchList.getText().trim().equalsIgnoreCase(newWatchlistName)) {
+                    System.out.println("WATCHLIST FOUND WITH NAME: " + newWatchlistName);
+                    found = true;
+                    SeleniumHelper.clickOnWebElement(watchList);
+                    break;
+                }
+            }
+            if (!found) {
+                System.out.println("CREATING NEW WATCHLIST WITH NAME: " + newWatchlistName);
+                SeleniumHelper.clickOnWebElement(By.xpath(CREATE_NEW_WATCH_LIST_BUTTON_XPATH));
+                SeleniumHelper.enterTextIntoTextBox(By.xpath(WATCHLIST_NAME_INPUT_BOX), newWatchlistName);
+                SeleniumHelper.clickOnWebElement(By.xpath(SAVE_BUTTON_XPATH));
             }
         }
-        if (index == -1) {
-            System.out.println("CREATING NEW WATCHLIST WITH NAME: "+newWatchlistName);
-            SeleniumHelper.clickOnWebElement(By.xpath(CREATE_NEW_WATCH_LIST_BUTTON_XPATH));
-            SeleniumHelper.enterTextIntoTextBox(By.xpath(WATCHLIST_NAME_INPUT_BOX), newWatchlistName);
-            SeleniumHelper.clickOnWebElement(By.xpath(SAVE_BUTTON_XPATH));
+        catch (StaleElementReferenceException e) {
+            SeleniumHelper.refreshWebPage();
+            createNewWatchListIfRequired();
         }
     }
 
     /**
      * function to add stocks to trading view watch list
+     * @param symbols: list of stock symbols to add
      */
-    public static void addStocksToWatchList() {
-        try {
-            List<String> symbols = CSVHelper.getStockSymbolsFromCSVFile();
-            for (String symbol : symbols) {
-                SeleniumHelper.clickOnWebElement(By.xpath(ADD_SYMBOL_BUTTON_XPATH));
-                SeleniumHelper.enterTextIntoTextBox(By.xpath(SYMBOL_SEARCH_BOX_XPATH), "NSE:"+symbol);
-                SeleniumHelper.clickOnWebElement(By.xpath(STOCK_FILTER_BUTTON_XPATH));
-                List<WebElement> results =
-                        SeleniumHelper.getListOfWebElements(By.xpath(SYMBOL_SEARCH_RESULT_LIST_XPATH));
-                if (results.size() > 0) {
-                    results.get(0).click();
-                    System.out.println("ADDED SYMBOL: "+symbol+" (Expected) / "
-                            +results.get(0).getText().trim()+" (Actual)");
-                }
-                else {
-                    System.out.println("COULDN'T ADD SYMBOL: "+symbol);
-                }
-                SeleniumHelper.clickOnWebElement(By.xpath(CLOSE_SYMBOL_SEARCH_WINDOW_BUTTON_XPATH));
+    public static void addStocksToWatchList(List<String> symbols) {
+        System.out.println("TOTAL SYMBOLS TO ADD: "+symbols.size());
+        int totalSymbolAdded = 0;
+        for (String symbol : symbols) {
+            SeleniumHelper.clickOnWebElement(By.xpath(ADD_SYMBOL_BUTTON_XPATH));
+            SeleniumHelper.enterTextIntoTextBox(By.xpath(SYMBOL_SEARCH_BOX_XPATH), "NSE:"+symbol);
+            SeleniumHelper.clickOnWebElement(By.xpath(STOCK_FILTER_BUTTON_XPATH));
+            List<WebElement> results =
+                    SeleniumHelper.getListOfWebElements(By.xpath(SYMBOL_SEARCH_RESULT_LIST_XPATH));
+            if (results.size() > 0) {
+                SeleniumHelper.clickOnWebElement(results.get(0));
+                System.out.println("ADDED SYMBOL ("+(++totalSymbolAdded)+" of "+symbols.size()+") --> "
+                        +symbol+" (Expected) / "+results.get(0).getText().trim()+" (Actual)");
             }
-        }
-        catch (IOException e) {
-            System.out.println("SOME ERROR OCCURRED READING THE SYMBOLS. " +
-                    "REASON COULD BE THE CSV FILE IS MISSING OR CORRUPTED");
+            else {
+                System.out.println("COULDN'T ADD SYMBOL: "+symbol);
+            }
+            SeleniumHelper.clickOnWebElement(By.xpath(CLOSE_SYMBOL_SEARCH_WINDOW_BUTTON_XPATH));
         }
     }
 
