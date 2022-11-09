@@ -127,5 +127,38 @@ underlying any NSE Index.
 
 ## Usage/Examples
 
+- Download the executable jar file from this link. [Click Here to Download](https://github.com/rajeshsinha1997/trading-view-watchlist-updater/raw/update-documentation/jar/TradingView_Watchlist_Updater_1.0.jar)
+- Move the downloaded jar file to the desktop location. [OPTIONAL]
+- Open command-prompt or terminal window at the same location where the
+  downloaded jar file is present
+- Type the command given below on the command-prompt or terminal window,
+  and press enter.
+  ```shell
+  java -jar <enter the name of the jar file here>
+  ```
+- Once you press enter, you will see the user acceptance message, please
+  read the message shown carefully and type **YES** (if you are ready to 
+  share your TradingView credentials) or **NO** (if you don't want to 
+  share your TradingView credentials). If you don't want to share the
+  credentials the application will exit, as without the credentials it
+  will not be able to sign in to TradingView and access your watch lists.
+- If you have chosen to share the credentials then at the next step the
+  application will ask you to share the path to the csv file, which you
+  have downloaded from the NSE website. You can either drag and drop the
+  csv file you have downloaded on the terminal window, or you can enter 
+  the path to the csv file manually on the terminal window screen.
+- Once you have provided the csv file path, then the application will ask
+  you to share your TradingView credentials (email ID and password).
+- Once you have shared the credentials then the application will ask you
+  to choose a browser to perform the required operation.
+  Please choose a browser from the list shown on the terminal window
+  screen (only choose that browser which is installed on your machine, 
+  do not choose any browser which is not installed on your machine),
+  and press enter.
+<hr>
 
+**AT THE SIGN IN SCREEN, ONCE THE APPLICATION HAS ENTERED YOUR EMAIL ID
+AND PASSWORD, YOU MAY SEE THAT A CAPTCHA NEEDS TO BE VERIFIED. PLEASE
+COMPLETE THAT CAPTCHA VERIFICATION BY YOURSELF AND ONCE THAT IS DONE
+CLICK ON THE SIGN-IN BUTTON.**
 
