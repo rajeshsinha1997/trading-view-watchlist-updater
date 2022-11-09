@@ -6,9 +6,7 @@ use to update your TradingView watchlist with the stocks
 underlying any NSE Index.
 <hr>
 
-## Author
-
-- [Rajesh Sinha](https://github.com/rajeshsinha1997)
+## Author: [Rajesh Sinha](https://github.com/rajeshsinha1997)
 <hr>
 
 ## Pre-Requisites
