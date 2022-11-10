@@ -125,7 +125,7 @@ underlying any NSE Index.
 
 ## Usage/Examples
 
-- Download the executable jar file from this link. [Click Here to Download](https://github.com/rajeshsinha1997/trading-view-watchlist-updater/raw/update-documentation/jar/TradingView_Watchlist_Updater_1.0.jar)
+- Download the executable jar file from this link. [Click Here to Download](https://github.com/rajeshsinha1997/trading-view-watchlist-updater/raw/main/jar/TradingView_Watchlist_Updater_1.0.jar)
 - Move the downloaded jar file to the desktop location. [OPTIONAL]
 - Open command-prompt or terminal window at the same location where the
   downloaded jar file is present
